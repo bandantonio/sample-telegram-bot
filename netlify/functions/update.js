@@ -1,4 +1,4 @@
-import axios from 'axios';
+const axios = require('axios').default;
 
 exports.handler = async (event) => {
     await axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
