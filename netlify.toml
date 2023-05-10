@@ -1,2 +1,2 @@
 [functions.update]
-schedule = "* * * * *"
+schedule = "@hourly"
