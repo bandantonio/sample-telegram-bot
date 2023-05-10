@@ -1,2 +1,2 @@
-[functions.update]
-schedule = "@hourly"
+[functions.check]
+schedule = "0 */6 * * *"
