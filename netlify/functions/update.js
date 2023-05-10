@@ -1,21 +1,19 @@
-const axios = require('axios').default;
+const { schedule } = require("@netlify/functions");
+const checkStackOverflow = require('../../checkStackOverflow');
 const sendMessage = require('../../sendMessage');
-const messageParts = require('../../messageParts');
 
-exports.handler = async (event) => {
+const handler = async (event) => {
     console.log('You have got a message', event.body);
     const { message } = JSON.parse(event.body);
-    const { command, botName, extra } = messageParts(message.text);
 
-    if (botName === 'mister_gold_serverless_bot' || botName === null) {
-        switch (command) {
-            case 'echo':
-                await sendMessage(message.chat.id, extra || 'BOO 👻');
-                break;
-            default:
-                await sendMessage(message.chat.id, `I don't know what you mean`);
-        }
+    if (message.text.match(/\/check/)) {
+        const days = await checkStackOverflow();
+        await sendMessage(message.chat.id, `🔑 ${days}\n📅 Last checked on ${new Date().toLocaleString()}`);
+    } else {
+        await sendMessage(message.chat.id, `I don't know what you mean`);
     }
 
-    return { statusCode: 200 };
+  return { statusCode: 200 };
 };
+
+exports.handler = schedule("*/3 * * * *", handler);
