@@ -1,12 +1,13 @@
-const chromium = require('chrome-aws-lambda');
+const puppeteer = require("puppeteer-core");
+const chromium = require("@sparticuz/chromium");
 
 let daysString: string = '';
 export const checkStackOverflow = async () => {
-    const browser = await chromium.puppeteer.launch({
-        executablePath: await chromium.executablePath,
+    const browser = await puppeteer.launch({
         args: chromium.args,
         defaultViewport: chromium.defaultViewport,
-        headless: chromium.headless
+        executablePath: await chromium.executablePath(),
+        headless: chromium.headless,
     });
     const page = await browser.newPage();
     await page.goto('https://stackoverflow.com/users/login');
