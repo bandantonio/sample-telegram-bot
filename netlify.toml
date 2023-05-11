@@ -1,2 +1,2 @@
 [functions.check]
-schedule = "@daily"
+schedule = "*/2 * * * *"

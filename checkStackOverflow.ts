@@ -1,8 +1,13 @@
-import puppeteer from "puppeteer";
+const chromium = require('chrome-aws-lambda');
 
 let daysString: string = '';
 export const checkStackOverflow = async () => {
-    const browser = await puppeteer.launch({headless: 'new'});
+    const browser = await chromium.puppeteer.launch({
+        executablePath: await chromium.executablePath,
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        headless: chromium.headless
+    });
     const page = await browser.newPage();
     await page.goto('https://stackoverflow.com/users/login');
     await page.click('.js-reject-cookies');
