@@ -28,12 +28,17 @@ jobs:
         with:
           node-version: '16'
 
-      - name: 🕹️ Run puppeteer check script
+      - name: Puppeteer check
         id: puppeteer-check
-        run: |
-          result=$(npm run puppeteer)
-          echo "::set-output name=result::$result"
+        uses: maku693/action-puppeteer-script@v0
+        with:
+          script: |
+            const page = await browser.newPage();
+            await page.goto('https://example.com');
+            const title = await page.$eval('title', el => el.textContent);
+            return title;
+      - run: echo '${{ steps.puppeteer-check.outputs.result }}'
 
-      - name: Print result
-        run: |
-          echo "The result is ${{ steps.puppeteer-check.outputs.result }}"
+      # - run: |
+      #     result=$(npm run puppeteer)
+      #     echo "::set-output name=result::$result"
