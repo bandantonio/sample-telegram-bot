@@ -1,11 +1,10 @@
-import { Handler } from "@netlify/functions";
-import { Client } from "@notionhq/client";
-import { checkStackOverflow } from "../../checkStackOverflow";
+const { Client } = require("@notionhq/client");
+const { checkStackOverflow } = require("../../checkStackOverflow");
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
-const databaseId = process.env.DB_ID!;
+const databaseId = process.env.DB_ID;
 
-export const handler: Handler = async (event, context) => {
+exports.handler = async (event) => {
 
     const days = await checkStackOverflow();
     const { next_run } = JSON.parse(event.body);

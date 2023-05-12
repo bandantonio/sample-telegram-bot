@@ -1,5 +1,5 @@
 [functions]
-external_node_modules = ["@sparticuz/chromium"]
+    included_files = ["./node_modules/@sparticuz/chromium/bin/**"]
 
 [functions.check]
-schedule = "*/2 * * * *"
+    schedule = "*/2 * * * *"

@@ -1,6 +1,6 @@
-import axios from 'axios';
+const axios = require('axios');
 
-export const sendMessage = async (chat_id, text) => {
+exports.sendMessage = async (chat_id, text) => {
     const url = `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`;
 
     await axios.post(url, {

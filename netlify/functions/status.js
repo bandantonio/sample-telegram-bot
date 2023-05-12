@@ -1,12 +1,10 @@
-import { Client } from "@notionhq/client";
-import { Handler } from "@netlify/functions";
-// const checkStackOverflow = require('../../checkStackOverflow');
-import { sendMessage } from "../../sendMessage";
+const { Client } = require('@notionhq/client');
+const { sendMessage } = require("../../sendMessage");
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
-const databaseId = process.env.DB_ID!;
-export const handler: Handler = async (event) => {
-    const { message } = JSON.parse(event.body!);
+const databaseId = process.env.DB_ID;
+exports.handler = async (event) => {
+    const { message } = JSON.parse(event.body);
 
     if (message.text.match(/\/status/)) {
         const response = await notion.databases.query({
