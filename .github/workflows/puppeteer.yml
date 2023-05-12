@@ -1,0 +1,42 @@
+name: puppeteer
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  node-setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/node-cache
+        id: cache-node-modules
+        with:
+          node-version: '16'
+      - run: npm i
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+
+  run-puppeteer:
+    name: 🕹️ Puppeteer
+    needs: node-setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/node-cache
+        id: cache-node-modules
+        with:
+          node-version: '16'
+
+      - name: 🕹️ Run puppeteer check script
+        id: puppeteer-check
+        run: |
+          result=$(npm run puppeteer)
+          echo "::set-output name=result::$result"
+
+      - name: Print result
+        run: |
+          echo "The result is ${{ steps.puppeteer-check.outputs.result }}"

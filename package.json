@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "BROWSER=none netlify dev"
+    "dev": "BROWSER=none netlify dev",
+    "puppeteer": "node check-stackoverflow.js"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,9 @@
     "puppeteer-core": "^20.2.0"
   },
   "devDependencies": {
+    "dotenv": "^16.0.3",
     "netlify-cli": "^13.2.2",
+    "node-fetch": "^3.3.1",
     "puppeteer": "^20.2.0"
   }
 }

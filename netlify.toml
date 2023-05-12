@@ -1,5 +1,0 @@
-[functions]
-    included_files = ["./node_modules/@sparticuz/chromium/bin/**"]
-
-[functions.check]
-    schedule = "@daily"

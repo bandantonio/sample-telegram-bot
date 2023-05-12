@@ -1,21 +1,18 @@
-const puppeteer = require("puppeteer-core");
-const chromium = require('@sparticuz/chromium');
+const puppeteer = require("puppeteer");
+require('dotenv').config();
 
-let daysString = '';
-exports.checkStackOverflow = async () => {
+(async () => {
     const browser = await puppeteer.launch({
-        args: chromium.args,
-        executablePath: await chromium.executablePath("/var/task/node_modules/@sparticuz/chromium/bin"),
-        headless: true,
+        headless: 'new'
     });
     const page = await browser.newPage();
     await page.goto('https://stackoverflow.com/users/login', { waitUntil: 'domcontentloaded' });
     await page.click('.js-reject-cookies');
-    await page.type('#email', process.env.SO_USER);
+    await page.type('#email', process.env.SO_USERNAME);
     await page.type('#password', process.env.SO_PASS);
     await page.keyboard.press('Enter');
     await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
-    page.goto(`https://stackoverflow.com/users/${process.env.SO_USER_ID}`);
+    await page.goto(`https://stackoverflow.com/users/${process.env.SO_ID}`);
     await page.waitForSelector('#js-daily-access-calendar-container');
     await page.setRequestInterception(true);
     page.on('request', (request) => {
@@ -27,4 +24,4 @@ exports.checkStackOverflow = async () => {
     await browser.close();
 
     return daysString;
-}
+})();
