@@ -1,8 +1,5 @@
 name: puppeteer
-on:
-  push:
-    branches:
-      - main
+on: [push]
 
 concurrency:
   group: ${{ github.ref }}
