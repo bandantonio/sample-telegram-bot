@@ -17,9 +17,7 @@ jobs:
       - run: npm i
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
 
-  run-puppeteer:
-    name: 🕹️ Puppeteer
-    needs: node-setup
+  update-page:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -28,26 +26,60 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Puppeteer check
-        id: puppeteer-check
-        uses: maku693/action-puppeteer-script@v0
-        env:
-          SO_USERNAME: ${{ secrets.SO_USERNAME }}
-          SO_PASS: ${{ secrets.SO_PASS }}
-          SO_ID: ${{ secrets.SO_ID }}
+      - uses: actions/github-script@v4
+        id: days-string
+        with:
+          script: return "Hello!"
+          result-encoding: string
+      - name: Get result
+        run: echo "${{ steps.days-string.outputs.result }}"
+
+      - name: Update Notion Page
+        uses: actions/github-script@v4
         with:
           script: |
-            const page = await browser.newPage();
-            await page.goto('https://stackoverflow.com/users/login', { waitUntil: 'domcontentloaded' });
-            await page.click('.js-reject-cookies');
-            await page.type('#email', process.env.SO_USERNAME);
-            await page.type('#password', process.env.SO_PASS);
-            await page.keyboard.press('Enter');
-            await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
-            await page.goto(`https://stackoverflow.com/users/${process.env.SO_ID}`);
-            await page.waitForSelector('#js-daily-access-calendar-container');
-            let daysString = await page.$eval('#js-daily-access-calendar-container > button > div:nth-child(2)', el => el.textContent);
+            const script = require('../../update-notion-db.js')
+            console.log(script(${{ steps.days-string.outputs.result }}))
 
-            return daysString;
+      # - name: Update Notion Page
+      #   uses: actions/github-script@v4
+      #   with:
+      #     script: ./path/to/your/script.js
+      #     secrets: NOTION_API_KEY
+      #     args: ${{ steps.days.outputs.daysString }}
 
-      - run: echo '${{ steps.puppeteer-check.outputs.result }}'
+
+  # run-puppeteer:
+  #   name: 🕹️ Puppeteer
+  #   needs: node-setup
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: ./.github/actions/node-cache
+  #       id: cache-node-modules
+  #       with:
+  #         node-version: '16'
+
+  #     - name: Puppeteer check
+  #       id: puppeteer-check
+  #       uses: maku693/action-puppeteer-script@v0
+  #       env:
+  #         SO_USERNAME: ${{ secrets.SO_USERNAME }}
+  #         SO_PASS: ${{ secrets.SO_PASS }}
+  #         SO_ID: ${{ secrets.SO_ID }}
+  #       with:
+  #         script: |
+  #           const page = await browser.newPage();
+  #           await page.goto('https://stackoverflow.com/users/login', { waitUntil: 'domcontentloaded' });
+  #           await page.click('.js-reject-cookies');
+  #           await page.type('#email', process.env.SO_USERNAME);
+  #           await page.type('#password', process.env.SO_PASS);
+  #           await page.keyboard.press('Enter');
+  #           await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+  #           await page.goto(`https://stackoverflow.com/users/${process.env.SO_ID}`);
+  #           await page.waitForSelector('#js-daily-access-calendar-container');
+  #           let daysString = await page.$eval('#js-daily-access-calendar-container > button > div:nth-child(2)', el => el.textContent);
+
+  #           return daysString;
+
+  #     - run: echo '${{ steps.puppeteer-check.outputs.result }}'
