@@ -50,7 +50,7 @@ jobs:
 
             return daysString;
 
-      - run: echo '${{ steps.puppeteer-check.outputs.result }}'
+      - run: echo ${{ steps.puppeteer-check.outputs.result }}
 
       - name: Update Notion page
         uses: actions/github-script@v4

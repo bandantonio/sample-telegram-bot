@@ -10,18 +10,15 @@ exports.handler = async (event) => {
         const response = await notion.databases.query({
             database_id: databaseId,
             sorts: [{
-                property: 'Next',
-                direction: 'descending'
+                property: 'Status',
+                direction: 'ascending'
 
             }]
         });
 
         const consecutiveDaysCount = response.results[0].properties.Status.title[0].plain_text;
-        const nextRunDate = response.results[0].properties.Next.rich_text[0].plain_text;
 
-        const formattedResponse = `🔑 ${consecutiveDaysCount}\n📅 Next check at: ${nextRunDate}`;
-
-        await sendMessage(message.chat.id, formattedResponse);
+        await sendMessage(message.chat.id, `🔑 ${consecutiveDaysCount}`);
     } else {
         await sendMessage(message.chat.id, `I don't know what you mean`);
     }
