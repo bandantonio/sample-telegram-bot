@@ -1,9 +1,9 @@
 const { Client } = require("@notionhq/client");
-const notion = new Client({ auth: process.env.NOTION_TOKEN });
-const databaseId = process.env.DB_ID;
+// const notion = new Client({ auth: process.env.NOTION_TOKEN });
+// const databaseId = process.env.DB_ID;
 
-exports.updateNotionDB = async (days) => {
-    console.log(days);
+// exports.updateNotionDB = (days) => {
+//     console.log(days);
     // await notion.pages.create({
     //     parent: { database_id: databaseId },
     //     properties: {
@@ -12,4 +12,8 @@ exports.updateNotionDB = async (days) => {
     //         },
     //     },
     // });
-};
+// };
+
+module.exports = (days) => {
+  return days;
+}

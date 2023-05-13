@@ -18,6 +18,8 @@ jobs:
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
 
   update-page:
+    name: Update page
+    needs: node-setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -36,50 +38,10 @@ jobs:
 
       - name: Update Notion Page
         uses: actions/github-script@v4
+        env:
+          DAYS: ${{ steps.days-string.outputs.result }}
         with:
           script: |
-            const script = require('../../update-notion-db.js')
-            console.log(script(${{ steps.days-string.outputs.result }}))
-
-      # - name: Update Notion Page
-      #   uses: actions/github-script@v4
-      #   with:
-      #     script: ./path/to/your/script.js
-      #     secrets: NOTION_API_KEY
-      #     args: ${{ steps.days.outputs.daysString }}
-
-
-  # run-puppeteer:
-  #   name: 🕹️ Puppeteer
-  #   needs: node-setup
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: ./.github/actions/node-cache
-  #       id: cache-node-modules
-  #       with:
-  #         node-version: '16'
-
-  #     - name: Puppeteer check
-  #       id: puppeteer-check
-  #       uses: maku693/action-puppeteer-script@v0
-  #       env:
-  #         SO_USERNAME: ${{ secrets.SO_USERNAME }}
-  #         SO_PASS: ${{ secrets.SO_PASS }}
-  #         SO_ID: ${{ secrets.SO_ID }}
-  #       with:
-  #         script: |
-  #           const page = await browser.newPage();
-  #           await page.goto('https://stackoverflow.com/users/login', { waitUntil: 'domcontentloaded' });
-  #           await page.click('.js-reject-cookies');
-  #           await page.type('#email', process.env.SO_USERNAME);
-  #           await page.type('#password', process.env.SO_PASS);
-  #           await page.keyboard.press('Enter');
-  #           await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
-  #           await page.goto(`https://stackoverflow.com/users/${process.env.SO_ID}`);
-  #           await page.waitForSelector('#js-daily-access-calendar-container');
-  #           let daysString = await page.$eval('#js-daily-access-calendar-container > button > div:nth-child(2)', el => el.textContent);
-
-  #           return daysString;
-
-  #     - run: echo '${{ steps.puppeteer-check.outputs.result }}'
+            const { DAYS } = process.env;
+            const script = require(`${{ github.workspace}}/update-notion-db.js`)
+            console.log(script(`${DAYS}`))
