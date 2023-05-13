@@ -34,11 +34,22 @@ jobs:
         with:
           script: |
             const page = await browser.newPage();
-            await page.goto('https://example.com');
-            const title = await page.$eval('title', el => el.textContent);
-            return title;
-      - run: echo '${{ steps.puppeteer-check.outputs.result }}'
+            await page.goto('https://stackoverflow.com/users/login', { waitUntil: 'domcontentloaded' });
+            await page.click('.js-reject-cookies');
+            await page.type('#email', secrets.SO_USERNAME);
+            await page.type('#password', secrets.SO_PASS);
+            await page.keyboard.press('Enter');
+            await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+            await page.goto(`https://stackoverflow.com/users/${secrets.SO_ID}`);
+            await page.waitForSelector('#js-daily-access-calendar-container');
+            await page.setRequestInterception(true);
+            page.on('request', (request) => {
+              if (request.resourceType() === 'image') request.abort();
+              else request.continue();
+            });
 
-      # - run: |
-      #     result=$(npm run puppeteer)
-      #     echo "::set-output name=result::$result"
+            let daysString = await page.$eval('#js-daily-access-calendar-container > button > div:nth-child(2)', el => el.textContent);
+
+            return daysString;
+
+      - run: echo '${{ steps.puppeteer-check.outputs.result }}'
