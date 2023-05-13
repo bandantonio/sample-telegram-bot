@@ -18,7 +18,7 @@ jobs:
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
 
   check-stackoverflow:
-    name: Puppeteer
+    name: Check StackOverflow
     needs: node-setup
     runs-on: ubuntu-latest
     steps:
@@ -56,8 +56,10 @@ jobs:
         uses: actions/github-script@v4
         env:
           DAYS: ${{ steps.puppeteer-check.outputs.result }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          DB_ID: ${{ secrets.DB_ID }}
         with:
           script: |
-            const { DAYS } = process.env;
+            const { DAYS, NOTION_TOKEN, DB_ID } = process.env;
             const script = require(`${{ github.workspace}}/update-notion-db.js`);
-            script(`${DAYS}`);
+            script(`${DAYS}`, `${NOTION_TOKEN}`, `${DB_ID}`);
