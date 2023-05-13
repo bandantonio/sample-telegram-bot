@@ -11,7 +11,7 @@ exports.handler = async (event) => {
             database_id: databaseId,
             sorts: [{
                 property: 'Status',
-                direction: 'ascending'
+                direction: 'descending'
 
             }]
         });
