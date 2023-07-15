@@ -2,8 +2,8 @@ name: Weekly contributions
 run-name: 📅 Scheduled run for weekly contributions
 on:
   schedule:
-  # Every Saturday (6th day) at 23:00
-  - cron: '0 20 * * 6'
+  # Every Sunday (7th day) at 00:00
+  - cron: '0 21 * * 6'
 
 jobs:
   daily-contribution:
