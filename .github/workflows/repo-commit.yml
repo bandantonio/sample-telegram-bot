@@ -2,8 +2,8 @@ name: Weekly contributions
 run-name: 📅 Scheduled run for weekly contributions
 on:
   schedule:
-  # Every Saturday (6th day) at 19:00
-  - cron: '0 19 * * 6'
+  # Every Saturday (6th day) at 23:00
+  - cron: '0 20 * * 6'
 
 jobs:
   daily-contribution:
@@ -19,4 +19,4 @@ jobs:
           git config --global user.name '${{ github.repository_owner }}'
           git config --global user.email '${{ github.repository_owner }}@users.noreply.github.com'
           git commit -am "Scheduled commit: update last modified date"
-          git push origin master
+          git push origin main
