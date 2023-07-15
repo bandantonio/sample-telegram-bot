@@ -1,0 +1,22 @@
+name: Weekly contributions
+run-name: 📅 Scheduled run for weekly contributions
+on:
+  schedule:
+  # Every Saturday (6th day) at 19:00
+  - cron: '0 19 * * 6'
+
+jobs:
+  daily-contribution:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Update 'Last updated' date
+        run: |
+          sed -i -e '$s/.*/'"<\!-- Last updated: $(date '+%c') \-->"'/' ${{ github.workspace }}/README.md
+      - name: Commit changes
+        run: |
+          git config --global user.name '${{ github.repository_owner }}'
+          git config --global user.email '${{ github.repository_owner }}@users.noreply.github.com'
+          git commit -am "Scheduled commit: update last modified date"
+          git push origin master
