@@ -46,7 +46,6 @@ jobs:
           script: |
             const page = await browser.newPage();
             await page.goto('https://stackoverflow.com/users/login', { waitUntil: 'domcontentloaded' });
-            await page.click('.js-reject-cookies');
             await page.type('#email', process.env.SO_USERNAME);
             await page.type('#password', process.env.SO_PASS);
             await page.keyboard.press('Enter');
