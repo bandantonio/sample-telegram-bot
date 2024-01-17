@@ -51,7 +51,7 @@ jobs:
             await page.type('#email', process.env.SO_USERNAME, { delay: 100 });
             await page.type('#password', process.env.SO_PASS, { delay: 100 });
             await page.keyboard.press('Enter');
-            console.log('Logged in! Navigating to profile page...')
+            console.log(`Logged in! Navigating to profile page with id ${process.env.SO_ID}...`)
             await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
             await page.goto(`https://stackoverflow.com/users/${process.env.SO_ID}`);
             console.log('Navigated to profile page');
