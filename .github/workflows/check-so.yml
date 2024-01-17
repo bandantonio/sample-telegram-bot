@@ -45,13 +45,18 @@ jobs:
         with:
           script: |
             const page = await browser.newPage();
+            console.log('Navigating to StackOverflow...');
             await page.goto('https://stackoverflow.com/users/login', { waitUntil: 'domcontentloaded' });
+            console.log('Logging in...');
             await page.type('#email', process.env.SO_USERNAME, { delay: 100 });
             await page.type('#password', process.env.SO_PASS, { delay: 100 });
             await page.keyboard.press('Enter');
+            console.log('Logged in! Navigating to profile page...')
             await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
             await page.goto(`https://stackoverflow.com/users/${process.env.SO_ID}`);
+            console.log('Navigated to profile page');
             await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+            console.log('Getting days string...');
             await page.waitForSelector('#js-daily-access-calendar-container');
             let daysString = await page.$eval('#js-daily-access-calendar-container > button > div:nth-child(2)', el => el.textContent);
 
