@@ -50,7 +50,8 @@ jobs:
             await page.type('#password', process.env.SO_PASS, { delay: 100 });
             await page.keyboard.press('Enter');
             await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
-            await page.goto(`https://stackoverflow.com/users/${process.env.SO_ID}`, { waitUntil: 'domcontentloaded' });
+            await page.goto(`https://stackoverflow.com/users/${process.env.SO_ID}`);
+            await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
             await page.waitForSelector('#js-daily-access-calendar-container');
             let daysString = await page.$eval('#js-daily-access-calendar-container > button > div:nth-child(2)', el => el.textContent);
 
