@@ -46,11 +46,11 @@ jobs:
           script: |
             const page = await browser.newPage();
             await page.goto('https://stackoverflow.com/users/login', { waitUntil: 'domcontentloaded' });
-            await page.type('#email', process.env.SO_USERNAME);
-            await page.type('#password', process.env.SO_PASS);
+            await page.type('#email', process.env.SO_USERNAME, { delay: 100 });
+            await page.type('#password', process.env.SO_PASS, { delay: 100 });
             await page.keyboard.press('Enter');
             await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
-            await page.goto(`https://stackoverflow.com/users/${process.env.SO_ID}`);
+            await page.goto(`https://stackoverflow.com/users/${process.env.SO_ID}`, { waitUntil: 'domcontentloaded' });
             await page.waitForSelector('#js-daily-access-calendar-container');
             let daysString = await page.$eval('#js-daily-access-calendar-container > button > div:nth-child(2)', el => el.textContent);
 
