@@ -45,9 +45,8 @@ jobs:
         with:
           script: |
             const page = await browser.newPage();
-                await page.goto('https://stackoverflow.com/users/login', { waitUntil: 'networkidle2' });
-            await page.waitForSelector('#onetrust-reject-all-handler');
-            await page.click('#onetrust-reject-all-handler');
+            await page.goto('https://stackoverflow.com/users/login', { waitUntil: 'networkidle2' });
+            await page.waitForFunction(() => window.OneTrust.RejectAll() == undefined);
             await page.type('#email', process.env.SO_USERNAME);
             await page.type('#password', process.env.SO_PASS);
             await page.keyboard.press('Enter');
